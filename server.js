@@ -51,7 +51,7 @@ function runSearch() {
 
 
         case "Add":
-          AddSearch();
+          addSearch();
           break;
 
         case "Exit":
@@ -167,50 +167,106 @@ function updateSearch(tableData, tableName){
   });
 };
 
+const departmentquestion = [
+  {
+    type: "input",
+    name: "inputname",
+    message: "What name would you like to add?",
 
-// function AddSearch() {
-//   inquirer
-//    .prompt({
-//      name: "action2",
-//      type: "list",
-//      message: "What table would you like to add too?",
-//      choices: [
-//        "department",
-//        "employee",
-//        "role",
-//        "Exit",
-//      ]
+  } 
+];
+const employeequestion = [
+  {
+    type: "input",
+    name: "firstname",
+    message: "What first name would you like to add?",
 
-//    })
-//    .then(function(answerx){
-//      if (answerx.action2 === "Exit"){
-//        process.exit(1);
-//      }
-//      connection.query("Select * From " + answerx.action2,[], function(err, res){
-//        if (err) {
-//          console.log(err);
-//        }
-//         console.table(res);
-//        inquirer
-//        .prompt({
-//          name: "newstep2",
-//          type: "list",
-//          message: "What would you like to do now?",
-//          choices: [
-//           "view",
-//           "update",
-//           "exit",
-//          ]
-//        })
-//        .then(function(choice){
-//          if (choice.newstep2 === "exit"){
-//            process.exit(1);
-//          }
-//          if (choice.newstep2 === "view"){
-//            viewSearch(); 
-//          }
-//        })
-//      });
+  },
+  {
+    type: "input",
+    name: "lastname",
+    message: "What last name would you like to add?", 
+  },
+  {
+    type: "input",
+    name: "role_id",
+    message: "What role id would you like to add?",
+  },
+  {
+    type: "input",
+    name: "manager_id",
+    message: "What manager id would you like to add?",
+  }
+
+];
+const rolequestion = [
+{ 
+  type: "input",
+name: "title",
+message: "What title would you like to add?",
+},
+{
+  type: "input",
+    name: "salary",
+    message: "What salary would you like to add?",
+},
+{
+  type: "input",
+    name: "department_id",
+    message: "What department id would you like to add?",
+}
+
+]
+
+function addSearch(tableData, tableName){
+ let questions = [{
+   type: "list",
+   name: "tableNamez",
+   message: "What table to you want to update?",
+   choices: ["department", "employee", "role",]
+ }];
+  
+  
+  inquirer
+  .prompt(questions).then(function(answers){
+    
+    let updatestring = "";
+    switch(answers.tableNamez){
+      case "department":
+        askquestions(departmentquestion).then(function(response){
+          updatestring = `(name) VALUES (${response.inputname})`;
+        });
+        
+        break;
+        case "employee":
+          askquestions(employeequestion).then(function(response){
+            updatestring = `(first_name, last_name, role_id, manager_id) VALUES (${response.firstname, response.lastname, response.role_id, response.manager_id})`;
+          });
+          
+          break;
+          case "role": 
+          askquestions(rolequestion).then(function(response){
+            updatestring = `(title, salary, department_id) VALUES (${response.title, response.salary, response.department_id})`;
+          });
+          
+    };
+   
+    let queryString = "Insert INTO " + answers.tableName  + updatestring;
+    console.log(queryString)
+    
+    connection.query(queryString);
+    
+    
+    
+  }).then(function(){
+    runSearch();
+  });
+};
+
+function askquestions(specquestions){
+inquirer
+   .prompt(specquestions).then(function(){
      
-//    })
-// };
+   })
+
+};
