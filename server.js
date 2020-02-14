@@ -187,56 +187,6 @@ function updateSearch(tableData, tableName) {
     });
 }
 
-const departmentquestion = [
-    {
-        type: "input",
-        name: "inputname",
-        message: "What name would you like to add?",
-
-    }
-];
-const employeequestion = [
-    {
-        type: "input",
-        name: "firstname",
-        message: "What first name would you like to add?",
-
-    },
-    {
-        type: "input",
-        name: "lastname",
-        message: "What last name would you like to add?",
-    },
-    {
-        type: "input",
-        name: "role_id",
-        message: "What role id would you like to add?",
-    },
-    {
-        type: "input",
-        name: "manager_id",
-        message: "What manager id would you like to add?",
-    }
-
-];
-const rolequestion = [
-    {
-        type: "input",
-        name: "title",
-        message: "What title would you like to add?",
-    },
-    {
-        type: "input",
-        name: "salary",
-        message: "What salary would you like to add?",
-    },
-    {
-        type: "input",
-        name: "department_id",
-        message: "What department id would you like to add?",
-    }
-
-];
 
 function addSearch(tableName) {
     /* If we don't have a table name, ask for it*/
@@ -251,48 +201,6 @@ function addSearch(tableName) {
             addRecord(tableName,questions)
         })
     }
-    /*  let questions = [{
-          type: "list",
-          name: "tableNamez",
-          message: "What table to you want to update?",
-          choices: ["department", "employee", "role",]
-      }];
-
-
-      inquirer
-          .prompt(questions).then(function (answers) {
-
-          let updatestring = "";
-          switch (answers.tableNamez) {
-              case "department":
-                  askquestions(departmentquestion).then(function (response) {
-                      updatestring = `(name) VALUES (${response.inputname})`;
-                  });
-
-                  break;
-              case "employee":
-                  askquestions(employeequestion).then(function (response) {
-                      updatestring = `(first_name, last_name, role_id, manager_id) VALUES (${response.firstname, response.lastname, response.role_id, response.manager_id})`;
-                  });
-
-                  break;
-              case "role":
-                  askquestions(rolequestion).then(function (response) {
-                      updatestring = `(title, salary, department_id) VALUES (${response.title, response.salary, response.department_id})`;
-                  });
-
-          }
-
-
-          let queryString = "Insert INTO " + answers.tableName + updatestring;
-          console.log(queryString);
-
-          connection.query(queryString);
-
-
-      }).then(function () {
-          runSearch();
-      });*/
 }
 function addRecord(table,questions){
     inquirer.prompt(questions).then(function(answers){
@@ -306,12 +214,4 @@ function addRecord(table,questions){
             runSearch();
         })
     })
-}
-
-function askquestions(specquestions) {
-    inquirer
-        .prompt(specquestions).then(function () {
-
-    })
-
 }
