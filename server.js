@@ -56,12 +56,13 @@ function runSearch() {
             }
         });
 }
-async function selectTable(){
+
+async function selectTable() {
     let answer = await inquirer
         .prompt({
             name: "action",
             type: "list",
-            message: "What table would you like to view?",
+            message: "Please select a table",
             choices: [
                 "department",
                 "employee",
@@ -70,10 +71,30 @@ async function selectTable(){
             ]
 
         });
-    if(answer.action === 'Exit'){
+    if (answer.action === 'Exit') {
         process.exit(1);
     }
     return answer.action;
+}
+
+
+async function getInquirerQuestionsByTable(table) {
+    let addQuestions = [];
+    return new Promise((resolve, reject) => {
+        connection.query(`DESCRIBE ${table}`, [], function (err, res) {
+            res.forEach(row => {
+                if (row.Field !== 'id') {
+                    addQuestions.push({
+                        type: "input",
+                        name: row.Field,
+                        message: "What is the value for " + row.Field + "?",
+                    })
+                }
+            });
+            resolve(addQuestions);
+        })
+    });
+
 }
 
 
@@ -218,48 +239,61 @@ const rolequestion = [
 ];
 
 function addSearch(tableName) {
-    let questions = [{
-        type: "list",
-        name: "tableNamez",
-        message: "What table to you want to update?",
-        choices: ["department", "employee", "role",]
-    }];
+    /* If we don't have a table name, ask for it*/
+    if (typeof tableName === 'undefined') {
+        selectTable().then(table => {
+            tableName = table;
+            getInquirerQuestionsByTable(table).then(questions => {
+                console.log(questions);
+            })
+        });
+    } else {
+        getInquirerQuestionsByTable(tableName).then(questions => {
+            console.log(questions);
+        })
+    }
+    /*  let questions = [{
+          type: "list",
+          name: "tableNamez",
+          message: "What table to you want to update?",
+          choices: ["department", "employee", "role",]
+      }];
 
 
-    inquirer
-        .prompt(questions).then(function (answers) {
+      inquirer
+          .prompt(questions).then(function (answers) {
 
-        let updatestring = "";
-        switch (answers.tableNamez) {
-            case "department":
-                askquestions(departmentquestion).then(function (response) {
-                    updatestring = `(name) VALUES (${response.inputname})`;
-                });
+          let updatestring = "";
+          switch (answers.tableNamez) {
+              case "department":
+                  askquestions(departmentquestion).then(function (response) {
+                      updatestring = `(name) VALUES (${response.inputname})`;
+                  });
 
-                break;
-            case "employee":
-                askquestions(employeequestion).then(function (response) {
-                    updatestring = `(first_name, last_name, role_id, manager_id) VALUES (${response.firstname, response.lastname, response.role_id, response.manager_id})`;
-                });
+                  break;
+              case "employee":
+                  askquestions(employeequestion).then(function (response) {
+                      updatestring = `(first_name, last_name, role_id, manager_id) VALUES (${response.firstname, response.lastname, response.role_id, response.manager_id})`;
+                  });
 
-                break;
-            case "role":
-                askquestions(rolequestion).then(function (response) {
-                    updatestring = `(title, salary, department_id) VALUES (${response.title, response.salary, response.department_id})`;
-                });
+                  break;
+              case "role":
+                  askquestions(rolequestion).then(function (response) {
+                      updatestring = `(title, salary, department_id) VALUES (${response.title, response.salary, response.department_id})`;
+                  });
 
-        }
-
-
-        let queryString = "Insert INTO " + answers.tableName + updatestring;
-        console.log(queryString);
-
-        connection.query(queryString);
+          }
 
 
-    }).then(function () {
-        runSearch();
-    });
+          let queryString = "Insert INTO " + answers.tableName + updatestring;
+          console.log(queryString);
+
+          connection.query(queryString);
+
+
+      }).then(function () {
+          runSearch();
+      });*/
 }
 
 function askquestions(specquestions) {
