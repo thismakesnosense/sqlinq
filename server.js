@@ -102,7 +102,7 @@ function viewSearch() {
                     if (choice.newstep === "update") {
                         updateSearch(res, answer.action);
                     } else {
-                        addSearch(res, answer.action);
+                        addSearch(table);
                     }
                 })
         });
@@ -217,7 +217,7 @@ const rolequestion = [
 
 ];
 
-function addSearch(tableData, tableName) {
+function addSearch(tableName) {
     let questions = [{
         type: "list",
         name: "tableNamez",
