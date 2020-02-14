@@ -33,7 +33,6 @@ function runSearch() {
             message: "What would you like to do?",
             choices: [
                 "View",
-
                 "Add",
                 "Exit"
             ]
@@ -57,6 +56,26 @@ function runSearch() {
             }
         });
 }
+async function selectTable(){
+    let answer = await inquirer
+        .prompt({
+            name: "action",
+            type: "list",
+            message: "What table would you like to view?",
+            choices: [
+                "department",
+                "employee",
+                "role",
+                "Exit",
+            ]
+
+        });
+    if(answer.action === 'Exit'){
+        process.exit(1);
+    }
+    return answer.action;
+}
+
 
 function viewSearch() {
     inquirer
