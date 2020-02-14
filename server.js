@@ -98,6 +98,8 @@ function viewSearch() {
                         }
                         if (choice.newstep === "update") {
                             updateSearch(res, answer.action);
+                        } else {
+                            addSearch(res, answer.action);
                         }
                     })
             });
