@@ -121,7 +121,7 @@ function viewSearch() {
                         process.exit(1);
                     }
                     if (choice.newstep === "update") {
-                        updateSearch(res, answer.action);
+                        updateSearch(res,table);
                     } else {
                         addSearch(table);
                     }
