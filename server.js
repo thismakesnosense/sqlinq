@@ -242,14 +242,13 @@ function addSearch(tableName) {
     /* If we don't have a table name, ask for it*/
     if (typeof tableName === 'undefined') {
         selectTable().then(table => {
-            tableName = table;
             getInquirerQuestionsByTable(table).then(questions => {
-                console.log(questions);
+                addRecord(table,questions)
             })
         });
     } else {
         getInquirerQuestionsByTable(tableName).then(questions => {
-            console.log(questions);
+            addRecord(tableName,questions)
         })
     }
     /*  let questions = [{
@@ -294,6 +293,19 @@ function addSearch(tableName) {
       }).then(function () {
           runSearch();
       });*/
+}
+function addRecord(table,questions){
+    inquirer.prompt(questions).then(function(answers){
+        let insert = `INSERT INTO ${table} SET `;
+        let values = [];
+        Object.keys(answers).forEach(key => {
+            values.push(answers[key]);
+            insert += key + ` = ?, `;
+        });
+        connection.query(insert.substring(0, insert.length-2),values,function(err,res){
+            runSearch();
+        })
+    })
 }
 
 function askquestions(specquestions) {
