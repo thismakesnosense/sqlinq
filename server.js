@@ -78,52 +78,36 @@ async function selectTable(){
 
 
 function viewSearch() {
-    inquirer
-        .prompt({
-            name: "action",
-            type: "list",
-            message: "What table would you like to view?",
-            choices: [
-                "department",
-                "employee",
-                "role",
-                "Exit",
-            ]
-
-        })
-        .then(function (answer) {
-            if (answer.action === "Exit") {
-                process.exit(1);
+    selectTable().then(table => {
+        connection.query("Select * From " + table, [], function (err, res) {
+            if (err) {
+                console.log(err);
             }
-            connection.query("Select * From " + answer.action, [], function (err, res) {
-                if (err) {
-                    console.log(err);
-                }
-                console.table(res);
-                inquirer
-                    .prompt({
-                        name: "newstep",
-                        type: "list",
-                        message: "What would you like to do now?",
-                        choices: [
-                            "add",
-                            "update",
-                            "exit",
-                        ]
-                    })
-                    .then(function (choice) {
-                        if (choice.newstep === "exit") {
-                            process.exit(1);
-                        }
-                        if (choice.newstep === "update") {
-                            updateSearch(res, answer.action);
-                        } else {
-                            addSearch(res, answer.action);
-                        }
-                    })
-            });
+            console.table(res);
+            inquirer
+                .prompt({
+                    name: "newstep",
+                    type: "list",
+                    message: "What would you like to do now?",
+                    choices: [
+                        "add",
+                        "update",
+                        "exit",
+                    ]
+                })
+                .then(function (choice) {
+                    if (choice.newstep === "exit") {
+                        process.exit(1);
+                    }
+                    if (choice.newstep === "update") {
+                        updateSearch(res, answer.action);
+                    } else {
+                        addSearch(res, answer.action);
+                    }
+                })
+        });
+    });
 
-        })
 }
 
 function updateSearch(tableData, tableName) {
